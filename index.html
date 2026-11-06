@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>互联网文化人不可能三角 · 测试</title>
+<style>
+  html { color-scheme: light only; background: #f5f5f5; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  *::selection { background: transparent; color: inherit; }
+  body { background: #f5f5f5; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px; color-scheme: light only; }
+  .test-container { background: #ffffff; border-radius: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); padding: 40px 35px; max-width: 800px; width: 100%; border: 1px solid #eaeaea; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 600; color: #0b2b4a; text-align: center; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .subhead { text-align: center; color: #4a5b6b; font-size: clamp(0.85rem, 3vw, 1rem); margin-bottom: 24px; border-bottom: 1px solid #e0e0e0; padding-bottom: 18px; }
+  .top-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .version-tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; flex: 1; }
+  .version-tab { background: #f9fafb; border: 1.5px solid #d6dde3; border-radius: 40px; padding: 9px 20px; font-size: clamp(0.85rem, 3vw, 1rem); font-weight: 500; color: #1e3c5a; cursor: pointer; transition: all .1s ease; }
+  .version-tab:hover { background: #fff; border-color: #1e3c5a; }
+  .version-tab.active { background: #1e3c5a; border-color: #1e3c5a; color: #fff; }
+  .version-tab .badge { display: inline-block; background: #eef1f4; color: #0b2b4a; font-size: 0.72rem; font-weight: 600; padding: 2px 7px; border-radius: 30px; margin-left: 6px; }
+  .version-tab.active .badge { background: #fff; color: #0b2b4a; }
+  .history-toggle { background: #f9fafb; border: 1.5px solid #d6dde3; border-radius: 40px; padding: 9px 20px; font-size: clamp(0.85rem, 3vw, 0.95rem); font-weight: 500; color: #1e3c5a; cursor: pointer; transition: all .1s ease; white-space: nowrap; }
+  .history-toggle:hover { background: #fff; border-color: #1e3c5a; }
+  .history-section { margin-bottom: 22px; border: 1px solid #eaeaea; background: #f9fafb; border-radius: 18px; padding: 16px 18px; }
+  .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: #0b2b4a; font-weight: 600; font-size: 1rem; }
+  .history-clear { background: none; border: none; color: #4a5b6b; font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
+  .history-list { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; }
+  .history-item { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .history-item .h-type { font-weight: 700; color: #0b2b4a; font-size: 0.95rem; }
+  .history-item .h-meta { font-size: 0.8rem; color: #6b7d8f; }
+  .history-empty { color: #8a9aa8; font-size: 0.9rem; padding: 4px 0; }
+  .progress-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-weight: 500; gap: 8px; flex-wrap: wrap; }
+  .question-counter { background: #f0f2f4; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; color: #0b2b4a; border: 1px solid #d6dde3; white-space: nowrap; }
+  .progress-bar-bg { flex-grow: 1; min-width: 100px; height: 8px; background: #e9ecef; border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 8px; background: #1e3c5a; width: 0%; border-radius: 10px; transition: width .15s ease; }
+  .question-text { font-size: clamp(1.05rem, 4vw, 1.4rem); font-weight: 500; color: #0b2b4a; line-height: 1.45; margin-bottom: 26px; min-height: 70px; display: flex; align-items: center; }
+  .options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+  .option-btn { background: #f9fafb; border: 1.5px solid #d6dde3; border-radius: 16px; padding: 14px 18px; font-size: clamp(0.9rem, 3.2vw, 1rem); font-weight: 500; color: #1e3c5a; text-align: left; cursor: pointer; transition: all .1s ease; display: flex; align-items: flex-start; line-height: 1.45; word-break: break-word; }
+  .option-btn:hover { background: #fff; border-color: #1e3c5a; box-shadow: 0 4px 12px rgba(0,20,40,.06); }
+  .option-btn.selected { background: #fff; border-color: #1e3c5a; border-width: 2px; box-shadow: 0 4px 14px rgba(20,50,80,.1); }
+  .option-letter { display: inline-block; width: 24px; height: 24px; background: #eef1f4; border-radius: 50%; text-align: center; line-height: 24px; font-size: 0.8rem; font-weight: 600; color: #0b2b4a; margin-right: 12px; flex-shrink: 0; margin-top: 1px; }
+  .option-btn.selected .option-letter { background: #1e3c5a; color: #fff; }
+  .nav-buttons { display: flex; justify-content: space-between; gap: 12px; }
+  .nav-btn { background: #fff; border: 1.5px solid #d6dde3; border-radius: 40px; padding: 11px 26px; font-size: clamp(0.9rem, 3vw, 1rem); font-weight: 500; color: #1e3c5a; cursor: pointer; transition: all .1s ease; flex: 1; }
+  .nav-btn:hover:not(:disabled) { background: #f0f4f8; border-color: #1e3c5a; }
+  .nav-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .nav-btn.primary { background: #1e3c5a; border-color: #1e3c5a; color: #fff; }
+  .nav-btn.primary:hover:not(:disabled) { background: #0b2b4a; border-color: #0b2b4a; }
+  .result-screen { padding: 10px 0 6px; }
+  .result-header { text-align: center; margin-bottom: 8px; }
+  .result-type { font-size: clamp(1.8rem, 9vw, 3.2rem); font-weight: 700; color: #0b2b4a; letter-spacing: 1px; line-height: 1.2; margin-bottom: 10px; }
+  .result-title { font-size: clamp(1.3rem, 5vw, 1.8rem); font-weight: 500; color: #1e3c5a; margin-bottom: 6px; }
+  .result-tagline { font-size: clamp(0.9rem, 3vw, 1rem); color: #4a5b6b; margin-bottom: 22px; }
+  .dims-bar { display: flex; flex-direction: column; gap: 12px; background: #f9fafb; border: 1px solid #eaeaea; border-radius: 18px; padding: 20px 24px; margin-bottom: 26px; }
+  .dim-row { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: #1e3c5a; }
+  .dim-label { width: 80px; font-weight: 600; color: #0b2b4a; text-align: right; font-size: 0.85rem; flex-shrink: 0; }
+  .dim-track { flex-grow: 1; min-width: 60px; height: 22px; background: #e9ecef; border-radius: 20px; overflow: hidden; }
+  .dim-fill { height: 100%; background: #1e3c5a; border-radius: 20px; }
+  .dim-pct { width: 48px; text-align: right; font-weight: 500; color: #1e3c5a; font-size: 0.85rem; flex-shrink: 0; }
+  .result-desc { font-size: clamp(0.9rem, 3.2vw, 1rem); color: #3f5567; line-height: 1.75; margin-bottom: 26px; border-top: 1px solid #e0e0e0; padding-top: 22px; }
+  .result-desc p { margin-bottom: 14px; }
+  .result-desc h3 { font-size: 1.05rem; color: #0b2b4a; margin: 20px 0 10px; font-weight: 600; }
+  .result-desc ul { padding-left: 20px; margin-bottom: 14px; }
+  .result-desc li { margin-bottom: 6px; }
+  .result-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .restart-btn { background: #fff; border: 1.5px solid #1e3c5a; border-radius: 40px; padding: 13px 36px; font-size: clamp(0.95rem, 3vw, 1.05rem); font-weight: 500; color: #1e3c5a; cursor: pointer; transition: all .1s ease; }
+  .restart-btn:hover { background: #1e3c5a; color: #fff; }
+  .hidden { display: none; }
+  @media (max-width: 560px) {
+    body { padding: 0; }
+    .test-container { border-radius: 0; border: none; box-shadow: none; padding: 20px 16px 30px; min-height: 100vh; }
+    .top-bar { flex-direction: row; align-items: center; }
+    .version-tabs { justify-content: flex-start; gap: 8px; }
+    .version-tab { padding: 7px 14px; }
+    .history-toggle { padding: 7px 14px; align-self: center; }
+    .question-text { min-height: 60px; }
+    .option-btn { padding: 12px 14px; }
+    .option-letter { width: 22px; height: 22px; line-height: 22px; font-size: 0.75rem; margin-right: 10px; }
+    .nav-btn { padding: 11px 16px; }
+    .dims-bar { padding: 14px 14px; }
+    .result-desc { padding-top: 18px; }
+    .dim-label { width: 60px; font-size: 0.75rem; }
+  }
+  @media (max-width: 380px) {
+    .version-tab .badge { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="test-container">
+  <h1>文化人不可能三角</h1>
+  <div class="subhead">互联网文化人 · 三阶深度测试</div>
+
+  <div class="top-bar">
+    <div class="version-tabs">
+      <button class="version-tab active" data-version="40">极简版 <span class="badge">40题</span></button>
+      <button class="version-tab" data-version="100">普通版 <span class="badge">100题</span></button>
+      <button class="version-tab" data-version="200">深度思考版 <span class="badge">200题</span></button>
+    </div>
+    <button class="history-toggle" id="mainHistoryToggle">历史记录</button>
+  </div>
+
+  <div class="history-section hidden" id="mainHistorySection">
+    <div class="history-header">
+      <span>测试历史</span>
+      <button class="history-clear" id="mainHistoryClear">清空</button>
+    </div>
+    <div class="history-list" id="mainHistoryList"></div>
+  </div>
+
+  <div id="quizArea">
+    <div class="progress-area">
+      <span class="question-counter" id="counter">1 / 40</span>
+      <div class="progress-bar-bg"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+    </div>
+    <div class="question-text" id="questionText">正在加载...</div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" disabled>上一题</button>
+      <button class="nav-btn primary" id="nextBtn">下一题</button>
+    </div>
+  </div>
+
+  <div id="resultArea" class="result-screen hidden">
+    <div class="result-header">
+      <div class="result-type" id="resultType">—</div>
+      <div class="result-title" id="resultTitle">—</div>
+      <div class="result-tagline" id="resultTagline"></div>
+    </div>
+    <div class="dims-bar" id="dimsBar"></div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-actions">
+      <button class="restart-btn" id="restartBtn">重新测试</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const BASE_QUESTIONS = [
+    { text: "看完一部热门电影，你的第一反应是：", options: [{ label: "分析里面的权力结构和意识形态", value: "P" }, { label: "代入角色的痛苦，想到自己的处境", value: "L" }, { label: "截图发朋友圈，研究它的构图和美学", value: "A" }, { label: "这拍的啥啊，不如回家睡觉", value: "N" }] },
+    { text: "看到路边一个被丢弃的旧椅子，你会想：", options: [{ label: "这是消费社会与物的异化", value: "P" }, { label: "它像一个被遗弃的文学意象", value: "L" }, { label: "这可以成为现成品艺术的素材", value: "A" }, { label: "挺挡路的，想把它挪开", value: "N" }] },
+    { text: "朋友向你抱怨前任不回消息，你会：", options: [{ label: "用精神分析理论解释对方为什么逃避", value: "P" }, { label: "觉得这简直是卡夫卡式的荒诞处境", value: "L" }, { label: "建议把这段经历做成行为艺术", value: "A" }, { label: "劝他别想太多，吃点好的", value: "N" }] },
+    { text: "失眠的时候，你脑子里在想什么？", options: [{ label: "反思自己今天的话语是否带有规训意味", value: "P" }, { label: "感觉自己正经历存在主义危机", value: "L" }, { label: "构思一个关于失眠的影像作品", value: "A" }, { label: "数羊，或者干脆刷短视频", value: "N" }] },
+    { text: "你和别人聊天时，最常用哪种词汇？", options: [{ label: "主体性、建构、凝视、他者", value: "P" }, { label: "荒诞、孤独、宿命、隐喻", value: "L" }, { label: "氛围感、解构、视觉张力", value: "A" }, { label: "吃瓜、无语、绝了、躺平", value: "N" }] },
+    { text: "你的朋友圈/社交媒体通常发什么？", options: [{ label: "对社会现象的结构性批判", value: "P" }, { label: "大段感悟、散文或小作文", value: "L" }, { label: "构图精美的照片或看展打卡", value: "A" }, { label: "很少发，或者只发吃喝玩乐", value: "N" }] },
+    { text: "去美术馆/看展览，你最关注：", options: [{ label: "展览背后的话语权和资本运作", value: "P" }, { label: "艺术家创作时的心理动机", value: "L" }, { label: "空间的布光、色彩与视觉冲击", value: "A" }, { label: "门票贵不贵，能不能出片", value: "N" }] },
+    { text: "面对生活中的琐碎（比如洗衣服），你会：", options: [{ label: "思考家务劳动中的性别政治", value: "P" }, { label: "觉得这就是西西弗斯推石头般的日常", value: "L" }, { label: "把洗衣液泡泡拍出ins风大片", value: "A" }, { label: "赶紧洗完，好去打游戏", value: "N" }] },
+    { text: "看到一句你很喜欢的语录，你会：", options: [{ label: "查证它的语境和背后的理论谱系", value: "P" }, { label: "把它摘抄在笔记本上，配上自己的情绪", value: "L" }, { label: "用好看的排版把它做成海报", value: "A" }, { label: "点个赞，然后划走", value: "N" }] },
+    { text: "如果生活是一场戏，你觉得自己是：", options: [{ label: "看透了剧本结构的旁观者", value: "P" }, { label: "深陷剧情、内心戏极多的主角", value: "L" }, { label: "负责场景布置和灯光的人", value: "A" }, { label: "随时想罢演的群演", value: "N" }] },
+    { text: "“普通地活着”对你来说：", options: [{ label: "是一种被资本驯化的平庸", value: "P" }, { label: "是最大的痛苦，因为不够独特", value: "L" }, { label: "太无聊了，生活必须像装置艺术", value: "A" }, { label: "挺好的，我就想当个普通人", value: "N" }] },
+    { text: "遇到一件倒霉事，你的心理活动是：", options: [{ label: "分析是什么结构性因素导致我倒霉", value: "P" }, { label: "觉得自己像陀思妥耶夫斯基笔下的人物", value: "L" }, { label: "把这份倒霉转化为一张情绪感大片", value: "A" }, { label: "骂两句，然后去吃顿好的", value: "N" }] },
+    { text: "你更容易被哪种人吸引？", options: [{ label: "能和你聊福柯、齐泽克的人", value: "P" }, { label: "能懂你深夜里那些矫情和痛楚的人", value: "L" }, { label: "审美在线、能给你拍好看照片的人", value: "A" }, { label: "能陪你吃喝玩乐、不装逼的人", value: "N" }] },
+    { text: "你更愿意把时间花在：", options: [{ label: "读理论书、看学术讲座", value: "P" }, { label: "写日记、看文艺电影", value: "L" }, { label: "看展、逛独立书店、拍照", value: "A" }, { label: "刷短视频、睡觉、吃零食", value: "N" }] },
+    { text: "当别人说你“想太多”时，你会：", options: [{ label: "觉得是他缺乏批判性思维", value: "P" }, { label: "感到受伤，觉得没人理解你的痛苦", value: "L" }, { label: "心想：这叫艺术家的敏锐", value: "A" }, { label: "确实，我也觉得我该少想点", value: "N" }] },
+    { text: "你更认同哪种“死法”？", options: [{ label: "死于对世界本质的彻底看透", value: "P" }, { label: "死于一场凄美的、文学般的爱情", value: "L" }, { label: "死于追求极致美的过程中", value: "A" }, { label: "老死，最好睡梦中没有痛苦", value: "N" }] },
+    { text: "看到一袋垃圾，你会：", options: [{ label: "思考消费主义与废弃物政治", value: "P" }, { label: "联想到某种颓废的文学隐喻", value: "L" }, { label: "觉得它像一个后现代的现成品艺术", value: "A" }, { label: "觉得该垃圾分类了", value: "N" }] },
+    { text: "你的恋爱观更接近：", options: [{ label: "一种社会建构的权力关系", value: "P" }, { label: "必须像小说一样有复杂的心理描写", value: "L" }, { label: "一场充满美感和氛围的行为艺术", value: "A" }, { label: "找个搭子过日子", value: "N" }] },
+    { text: "看到一篇爆款文章，你会：", options: [{ label: "批判它背后的意识形态陷阱", value: "P" }, { label: "共情作者的孤独与挣扎", value: "L" }, { label: "研究它的排版和视觉呈现", value: "A" }, { label: "看完就忘，或者根本不点开", value: "N" }] },
+    { text: "你最受不了哪种人？", options: [{ label: "毫无批判性、人云亦云的人", value: "P" }, { label: "肤浅、没有内心世界的人", value: "L" }, { label: "毫无审美、土里土气的人", value: "A" }, { label: "天天装深沉、无病呻吟的人", value: "N" }] },
+    { text: "如果在小说里，你更可能是：", options: [{ label: "看透一切但无力改变的智者", value: "P" }, { label: "内心充满矛盾与痛苦的男主角", value: "L" }, { label: "书中那个最神秘、最美的意象", value: "A" }, { label: "活到最后的路人甲", value: "N" }] },
+    { text: "你的手机壁纸通常是：", options: [{ label: "简洁的几何图形或纯色", value: "P" }, { label: "带有复古感或忧郁氛围的图片", value: "L" }, { label: "自己拍的高审美摄影作品", value: "A" }, { label: "默认壁纸或者爱豆/宠物", value: "N" }] },
+    { text: "在团体中，你更常：", options: [{ label: "看透群体的愚蠢并保持距离", value: "P" }, { label: "觉得自己是格格不入的异类", value: "L" }, { label: "负责提升整个团队的审美", value: "A" }, { label: "随大流，尽量不惹事", value: "N" }] },
+    { text: "“痛苦”对你来说意味着：", options: [{ label: "阶级压迫或社会结构的产物", value: "P" }, { label: "证明自己存在和深度的勋章", value: "L" }, { label: "一种可以用来创作的绝美原料", value: "A" }, { label: "能避则避，实在不行就大哭一场", value: "N" }] },
+    { text: "你更愿意在一家什么样的咖啡馆待一下午？", options: [{ label: "安静、没人打扰，适合看书的", value: "P" }, { label: "角落里有故事感、放着爵士乐的", value: "L" }, { label: "设计感极强、非常出片的", value: "A" }, { label: "有插座、有wifi、能打游戏的", value: "N" }] },
+    { text: "当别人在朋友圈发伤痛文学时，你会：", options: [{ label: "觉得这是一种幼稚的自我感动", value: "P" }, { label: "理解并可能默默点个赞", value: "L" }, { label: "觉得配图太丑，想教他怎么调色", value: "A" }, { label: "截图发给朋友一起笑", value: "N" }] },
+    { text: "如果你要写一本书，你更想写：", options: [{ label: "《论现代社会的结构性异化》", value: "P" }, { label: "《在深夜的房间里，我与自己交谈》", value: "L" }, { label: "《视觉文化：从废土到赛博》", value: "A" }, { label: "《如何快乐地躺平》", value: "N" }] },
+    { text: "听到一首悲伤的歌，你的感受是：", options: [{ label: "分析这首歌的创作背景与时代症候", value: "P" }, { label: "觉得每一句歌词都在唱自己", value: "L" }, { label: "觉得旋律和编曲太有氛围感了", value: "A" }, { label: "好听就多听几遍，不好听就切", value: "N" }] },
+    { text: "你怎么看待“网络流行语”？", options: [{ label: "这是一种语言暴力和降智", value: "P" }, { label: "这是当代人无法表达自我的悲哀", value: "L" }, { label: "这是一种新兴的互联网亚文化美学", value: "A" }, { label: "好玩就跟着用，想那么多干嘛", value: "N" }] },
+    { text: "如果在派对上遇到一个沉默的人，你会想：", options: [{ label: "他可能看透了这场社交的无意义", value: "P" }, { label: "他一定有着非常丰富痛苦的内心", value: "L" }, { label: "他一个人待着的画面很具有电影感", value: "A" }, { label: "他是不是社恐？还是别去打扰了", value: "N" }] },
+    { text: "你更认同哪种“美”？", options: [{ label: "美是权力的规训和意识形态的建构", value: "P" }, { label: "美是残酷的，伴随着心碎和孤独", value: "L" }, { label: "美就是视觉冲击力，是构图与色彩", value: "A" }, { label: "看着顺眼、舒服就是美", value: "N" }] },
+    { text: "你的失眠大多是因为：", options: [{ label: "思考一些宏大的、无解的哲学问题", value: "P" }, { label: "沉浸在过去的痛苦或自我的世界中", value: "L" }, { label: "灵感迸发，想立刻起来搞创作", value: "A" }, { label: "玩手机停不下来", value: "N" }] },
+    { text: "当有人批评你“太装”时，你会：", options: [{ label: "反驳他根本不懂什么是批判性思维", value: "P" }, { label: "觉得受到了深深的伤害，自我怀疑", value: "L" }, { label: "无所谓，懂我的人自然懂我的品味", value: "A" }, { label: "哈哈一笑，我本来就是个俗人", value: "N" }] },
+    { text: "你觉得生命中不可或缺的是：", options: [{ label: "清醒和独立思考", value: "P" }, { label: "爱，以及被理解的瞬间", value: "L" }, { label: "发现美的眼睛", value: "A" }, { label: "好吃的东西和充足的睡眠", value: "N" }] },
+    { text: "看一场话剧，落幕时你心里在想：", options: [{ label: "这出戏对父权制进行了极好的解构", value: "P" }, { label: "眼泪止不住，感觉灵魂被击中了", value: "L" }, { label: "这舞台美术和灯光绝了", value: "A" }, { label: "终于结束了，好饿啊", value: "N" }] },
+    { text: "你觉得“孤独”是：", options: [{ label: "现代原子化社会制造的骗局", value: "P" }, { label: "人类最深刻的宿命", value: "L" }, { label: "最好的创作氛围", value: "A" }, { label: "习惯就好，打把游戏就忘了", value: "N" }] },
+    { text: "如果有下辈子，你更愿意做：", options: [{ label: "一个看穿一切但冷眼旁观的神", value: "P" }, { label: "一个历经磨难但留下传世之作的作家", value: "L" }, { label: "一件被陈列在顶级博物馆的艺术品", value: "A" }, { label: "一只吃了睡睡了吃的猫", value: "N" }] },
+    { text: "你的书架上放得最多的是：", options: [{ label: "哲学、社会学、心理学理论书", value: "P" }, { label: "小说、诗集、散文集", value: "L" }, { label: "画册、摄影集、设计类杂志", value: "A" }, { label: "除了考试用的书，没有别的", value: "N" }] },
+    { text: "朋友说想去海边玩，你脑子里浮现的是：", options: [{ label: "海滩其实是一个被消费主义包装的空间", value: "P" }, { label: "海风吹过，两个孤独的灵魂在沙滩上", value: "L" }, { label: "很好，可以拍一组极具氛围感的照片", value: "A" }, { label: "太好了，可以去吃海鲜大排档", value: "N" }] },
+    { text: "你觉得自己距离“普通地活着”有多远？", options: [{ label: "很远，因为我看得太透彻了", value: "P" }, { label: "很远，因为我太痛苦太独特了", value: "L" }, { label: "很远，因为我的品味和审美太高了", value: "A" }, { label: "零距离，我就是个普通俗人", value: "N" }] }
+  ];
+
+  const TYPE_DESC = {
+    PLA: { title: "完全体·文化人", tag: "三花聚顶·走火入魔", desc: "你完美踩中了三个坑。你看穿一切、内心戏极多、审美极度挑剔。你几乎无法“普通地活着”，因为在你眼里，万事万物都是权力的凝视、宿命的悲剧和绝美的素材。你经常觉得周围的人都很无聊，但也经常因为找不到同类而痛苦。" },
+    PL: { title: "哲学文学双修", tag: "看透一切的痛苦灵魂", desc: "你既懂理论又懂矫情。你会用福柯的理论分析自己为什么深夜 emo，也会觉得自己的悲伤像陀思妥耶夫斯基的小说一样深刻。你自认看透了世界的运转规律，但依然在深夜里为人类的宿命（和自己的单身）流泪。" },
+    PA: { title: "哲学艺术双修", tag: "冷酷的审美批判者", desc: "你能一眼看穿资本的陷阱，也能准确说出它为什么丑。你逛展时一边批判着艺术的商品化，一边忍不住掏出手机找最好的构图。你是个极度清醒的视觉动物，不轻易被感动，除非那个画面真的很有张力。" },
+    LA: { title: "文学艺术双修", tag: "矫情的氛围感大师", desc: "你是一个没有理论武装的诗人。你很容易陷入情绪，也极度追求美感。你会在深夜听着后摇流泪，也会为了一张照片在冷风里等一个小时。你不在乎什么解构和权力，你只在乎这一刻够不够动人、够不够“有感觉”。" },
+    P: { title: "单修·哲学入脑", tag: "冷酷的解构机器", desc: "你满脑子都是理论。你看谁都觉得对方缺乏批判性思维。你很难被单纯的文学故事或视觉美感打动，你更关心背后的逻辑和意识形态。你的清醒让你很难真正快乐。" },
+    L: { title: "单修·文学中毒", tag: "悲剧的自我感动者", desc: "你内心极其丰富，甚至到了有点抓马的程度。你觉得生活就是一场小说，自己就是那个历经磨难的悲剧主角。你情绪起伏大，极度渴望被理解。你最大的痛苦是发现自己的痛苦居然不够独特。" },
+    A: { title: "单修·艺术过敏", tag: "偏执的审美狂人", desc: "你重度依赖视觉和氛围。你受不了丑的东西，也受不了没有审美的人。你很有创作欲，总是试图把生活过成一场展览。别人觉得你事多，你觉得他们俗气。" },
+    N: { title: "普通人", tag: "远离文化人陷阱", desc: "恭喜你！你距离“普通地活着”非常近。你看不懂那些神神叨叨的理论，也不想大半夜伤春悲秋，对过度包装的网红展也毫无兴趣。你活得真实、接地气，饿了就吃，困了就睡。在这个全员装逼的互联网时代，你的“不装”，才是最高级的防御。" }
+  };
+
+  const STORAGE_KEY = 'culture_triangle_history_v1';
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function prepareQuestions(base, count) {
+    let pool = base.slice();
+    if (pool.length < count) {
+      const extra = [];
+      let i = 0;
+      while (pool.length + extra.length < count) {
+        const q = base[i % base.length];
+        extra.push({
+          text: "换个情境：" + q.text,
+          options: q.options.map(o => ({ label: o.label, value: o.value }))
+        });
+        i++;
+      }
+      pool = pool.concat(extra);
+    }
+    const shuffled = shuffle(pool).slice(0, count);
+    return shuffled.map(q => ({
+      text: q.text,
+      options: shuffle(q.options).map(o => ({ label: o.label, value: o.value }))
+    }));
+  }
+
+  function getVersionQuestions(version) {
+    if (version === 40) return prepareQuestions(BASE_QUESTIONS, 40);
+    if (version === 100) return prepareQuestions(BASE_QUESTIONS, 100);
+    return prepareQuestions(BASE_QUESTIONS, 200);
+  }
+
+  let currentVersion = 40;
+  let questions = [];
+  let currentQuestionIndex = 0;
+  let answers = [];
+
+  const quizArea = document.getElementById('quizArea');
+  const resultArea = document.getElementById('resultArea');
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progressFill');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const resultType = document.getElementById('resultType');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultTagline = document.getElementById('resultTagline');
+  const dimsBar = document.getElementById('dimsBar');
+  const resultDesc = document.getElementById('resultDesc');
+  const restartBtn = document.getElementById('restartBtn');
+  const mainHistoryToggle = document.getElementById('mainHistoryToggle');
+  const mainHistorySection = document.getElementById('mainHistorySection');
+  const mainHistoryList = document.getElementById('mainHistoryList');
+  const mainHistoryClear = document.getElementById('mainHistoryClear');
+  const versionTabs = document.querySelectorAll('.version-tab');
+
+  function resetState(version) {
+    currentVersion = version;
+    questions = getVersionQuestions(version);
+    currentQuestionIndex = 0;
+    answers = new Array(questions.length).fill(null);
+    quizArea.classList.remove('hidden');
+    resultArea.classList.add('hidden');
+    versionTabs.forEach(tab => {
+      tab.classList.toggle('active', parseInt(tab.dataset.version) === version);
+    });
+    renderQuestion();
+  }
+
+  function updateProgress() {
+    const total = questions.length;
+    const answered = answers.filter(a => a !== null).length;
+    progressFill.style.width = (answered / total) * 100 + '%';
+    counter.textContent = (currentQuestionIndex + 1) + ' / ' + total;
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQuestionIndex];
+    questionText.textContent = q.text;
+    const saved = answers[currentQuestionIndex];
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      if (saved !== null && saved === opt.value) btn.classList.add('selected');
+      btn.innerHTML = '<span class="option-letter">' + String.fromCharCode(65 + idx) + '</span>' + opt.label;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[currentQuestionIndex] = opt.value;
+        updateProgress();
+        updateNavButtons();
+      });
+      optionsContainer.appendChild(btn);
+    });
+    updateProgress();
+    updateNavButtons();
+  }
+
+  function updateNavButtons() {
+    prevBtn.disabled = currentQuestionIndex === 0;
+    nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? '查看结果' : '下一题';
+    const has = answers[currentQuestionIndex] !== null;
+    if (!has && currentQuestionIndex < questions.length - 1) nextBtn.disabled = true;
+    else nextBtn.disabled = false;
+  }
+
+  function goToNext() {
+    if (currentQuestionIndex < questions.length - 1) {
+      if (answers[currentQuestionIndex] === null) return;
+      currentQuestionIndex++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function goToPrev() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderQuestion();
+    }
+  }
+
+  function calculate() {
+    const counts = { P: 0, L: 0, A: 0, N: 0 };
+    answers.forEach(v => { if (v && counts.hasOwnProperty(v)) counts[v]++; });
+    
+    const p = counts.P;
+    const l = counts.L;
+    const a = counts.A;
+    const n = counts.N;
+
+    let type = 'N';
+    if (p > l && p > a && p > n) type = 'P';
+    else if (l > p && l > a && l > n) type = 'L';
+    else if (a > p && a > l && a > n) type = 'A';
+    else if (n >= p && n >= l && n >= a) type = 'N';
+    else {
+      const sorted = [
+        { key: 'P', val: p },
+        { key: 'L', val: l },
+        { key: 'A', val: a }
+      ].sort((x, y) => y.val - x.val);
+      
+      if (sorted[0].val === sorted[1].val) {
+        type = sorted[0].key + sorted[1].key;
+        if (type === 'LP') type = 'PL';
+        if (type === 'AP') type = 'PA';
+        if (type === 'AL') type = 'LA';
+      } else {
+        type = sorted[0].key;
+      }
+    }
+    
+    if (p > 0 && l > 0 && a > 0 && p + l + a > n * 2) {
+       const totalTop = p + l + a;
+       if (p / totalTop > 0.25 && l / totalTop > 0.25 && a / totalTop > 0.25) {
+         type = 'PLA';
+       }
+    }
+    
+    return { type, counts };
+  }
+
+  function renderDims(counts) {
+    const total = counts.P + counts.L + counts.A + counts.N || 1;
+    const dims = [
+      { label: '哲学入脑', val: counts.P },
+      { label: '文学中毒', val: counts.L },
+      { label: '艺术过敏', val: counts.A },
+      { label: '普通地活着', val: counts.N }
+    ];
+    dimsBar.innerHTML = dims.map(d => {
+      const pct = Math.round((d.val / total) * 100);
+      return '<div class="dim-row">' +
+        '<span class="dim-label">' + d.label + '</span>' +
+        '<div class="dim-track"><div class="dim-fill" style="width:' + pct + '%"></div></div>' +
+        '<span class="dim-pct">' + pct + '%</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function saveToHistory(type, version, counts) {
+    let history = [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) history = JSON.parse(raw);
+    } catch (e) { history = []; }
+    history.unshift({
+      type,
+      version,
+      counts,
+      time: new Date().toLocaleString('zh-CN')
+    });
+    if (history.length > 20) history = history.slice(0, 20);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) {}
+  }
+
+  function renderHistory() {
+    let history = [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) history = JSON.parse(raw);
+    } catch (e) { history = []; }
+    if (!history.length) {
+      mainHistoryList.innerHTML = '<div class="history-empty">暂无历史记录</div>';
+      return;
+    }
+    mainHistoryList.innerHTML = history.map(h => (
+      '<div class="history-item">' +
+        '<span class="h-type">' + (TYPE_DESC[h.type] ? TYPE_DESC[h.type].title : h.type) + '</span>' +
+        '<span class="h-meta">' + h.version + '题 · ' + h.time + '</span>' +
+      '</div>'
+    )).join('');
+  }
+
+  function showResult() {
+    if (answers.some(a => a === null)) {
+      for (let i = 0; i < answers.length; i++) {
+        if (answers[i] === null) {
+          currentQuestionIndex = i;
+          renderQuestion();
+          return;
+        }
+      }
+    }
+    
+    const { type, counts } = calculate();
+    const info = TYPE_DESC[type] || TYPE_DESC['N'];
+    
+    resultType.textContent = info.title;
+    resultTitle.textContent = info.tag;
+    resultTagline.textContent = '你的文化人三角诊断报告';
+    renderDims(counts);
+    
+    resultDesc.innerHTML = 
+      '<p>' + info.desc + '</p>' +
+      '<h3>关于这个测试</h3>' +
+      '<p>“互联网文化人不可能三角”指的是：哲学入脑、文学中毒、艺术过敏。这三者如同诅咒，只要沾上其中两个，就会彻底丧失“普通地活着”的能力。</p>' +
+      '<p>你的测试结果为你指出了你在互联网文化光谱上的位置。测试结果仅供娱乐，切勿过度对号入座（不过，如果你对号入座了并且觉得被冒犯了，那说明你的哲学入脑和文学中毒确实很深）。</p>';
+      
+    quizArea.classList.add('hidden');
+    resultArea.classList.remove('hidden');
+    saveToHistory(type, currentVersion, counts);
+  }
+
+  function restartTest() {
+    currentQuestionIndex = 0;
+    answers = new Array(questions.length).fill(null);
+    resultArea.classList.add('hidden');
+    quizArea.classList.remove('hidden');
+    renderQuestion();
+  }
+
+  versionTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const v = parseInt(tab.dataset.version);
+      if (v !== currentVersion) resetState(v);
+    });
+  });
+
+  nextBtn.addEventListener('click', goToNext);
+  prevBtn.addEventListener('click', goToPrev);
+  restartBtn.addEventListener('click', restartTest);
+
+  mainHistoryToggle.addEventListener('click', () => {
+    if (mainHistorySection.classList.contains('hidden')) {
+      renderHistory();
+      mainHistorySection.classList.remove('hidden');
+    } else {
+      mainHistorySection.classList.add('hidden');
+    }
+  });
+
+  mainHistoryClear.addEventListener('click', () => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderHistory();
+  });
+
+  resetState(40);
+})();
+</script>
+</body>
+</html>
